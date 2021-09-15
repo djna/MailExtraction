@@ -5,7 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,24 +19,23 @@ public class EmailSearch {
             fileName = args[1];
         }
         try {
-            searchFile(fileName);
+            String regex = "\\S+@((?:\\w+\\.)+\\w+)\\s*";
+            Map<String, Integer> domainMap = searchFileWithRegex(fileName, regex);
+            printResults(sortMap(domainMap));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void searchFile(String fileName) throws IOException {
+    private static Map<String, Integer> searchFileWithRegex(String fileName, String regex) throws IOException {
         Path filePath = Paths.get(fileName);
-
-        int counter = 0;
 
         String contents = Files.readString(filePath);
 
-        String regex = "\\S+@((?:\\w+\\.)+\\w+)\\s*";
         Pattern emailPattern = Pattern.compile(regex);
         Matcher m = emailPattern.matcher(contents);
 
-        Map<String, Integer> domainMap = new HashMap<String, Integer>();
+        Map<String, Integer> domainMap = new LinkedHashMap<String, Integer>();
         while( m.find() ) {
             String domain = m.group(1);
             Integer domainCount = domainMap.get(domain);
@@ -44,20 +44,28 @@ public class EmailSearch {
             }
             domainCount++;
             domainMap.put(domain, domainCount);
-            counter++;
         }
+        return domainMap;
+    }
 
+    private static void printResults(Map<String, Integer> domainMap) {
         for ( String domain: domainMap.keySet() ){
             StringBuffer stringBuffer = new StringBuffer("Domain ");
             stringBuffer.append(domain);
             stringBuffer.append(": ");
             stringBuffer.append(domainMap.get(domain));
-            System.out.println(stringBuffer.toString());
+            System.out.println(stringBuffer);
         }
-
-        System.out.printf("Found %s %d times", regex, counter);
-
     }
 
+    private static Map<String, Integer> sortMap(Map<String, Integer> domainMap) {
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
 
+        domainMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+
+        return sortedMap;
+    }
 }

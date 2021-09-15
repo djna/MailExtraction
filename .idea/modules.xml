@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/MailExtraction.iml" filepath="$PROJECT_DIR$/.idea/MailExtraction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SharedExample/SharedExample.iml" filepath="$PROJECT_DIR$/SharedExample/SharedExample.iml" />
+    </modules>
+  </component>
+</project>

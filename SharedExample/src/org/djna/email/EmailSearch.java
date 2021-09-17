@@ -35,7 +35,7 @@ public class EmailSearch {
         Pattern emailPattern = Pattern.compile(regex);
         Matcher m = emailPattern.matcher(contents);
 
-        Map<String, Integer> domainMap = new HashMap<String, Integer>();
+        Map<String, Integer> domainMap = new HashMap<>();
         while( m.find() ) {
             String domain = m.group(1);
             Integer domainCount = domainMap.get(domain);
@@ -47,17 +47,19 @@ public class EmailSearch {
             counter++;
         }
 
-        for ( String domain: domainMap.keySet() ){
-            StringBuffer stringBuffer = new StringBuffer("Domain ");
-            stringBuffer.append(domain);
-            stringBuffer.append(": ");
-            stringBuffer.append(domainMap.get(domain));
-            System.out.println(stringBuffer.toString());
-        }
+        printFromMap(domainMap);
 
         System.out.printf("Found %s %d times", regex, counter);
 
     }
 
-
+    private static void printFromMap(Map<String, Integer> domainMap) {
+        for ( String domain: domainMap.keySet() ){
+            StringBuffer stringBuffer = new StringBuffer("Domain ");
+            stringBuffer.append(domain);
+            stringBuffer.append(": ");
+            stringBuffer.append(domainMap.get(domain));
+            System.out.println(stringBuffer);
+        }
+    }
 }

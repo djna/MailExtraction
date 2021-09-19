@@ -17,27 +17,27 @@ public class EmailSearch {
         if (args.length > 1){
             fileName = args[1];
         }
+        Path filePath = Paths.get(fileName);
+        String contents = null;
         try {
-            searchFile(fileName);
+            contents = Files.readString(filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        searchFile(contents);
+
     }
 
-    private static void searchFile(String fileName) throws IOException {
-        Path filePath = Paths.get(fileName);
+    private static void searchFile(String contents) {
 
-
-        String contents = Files.readString(filePath);
-
-
-        String regex = "";
+        String regex = "softwire.com";
         Pattern emailPattern = Pattern.compile(regex);
         Matcher m = emailPattern.matcher(contents);
 
         Map<String, Integer> domainMap = new HashMap<String, Integer>();
         while( m.find() ) {
-
+            System.out.println("got " + m);
         }
 
 

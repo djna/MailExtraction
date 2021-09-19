@@ -54,7 +54,10 @@ public class EmailSearch {
             System.out.println("domain " + domain);
         }
 
-
+        System.out.println(":Lambda style Sorted List of domains ");
+        uniqueDomains.stream().sorted().forEach(
+                domain -> System.out.println(domain)
+        );
 
 
 

@@ -35,7 +35,7 @@ public class EmailSearch {
         Pattern emailPattern = Pattern.compile(regex);
         Matcher m = emailPattern.matcher(contents);
 
-        Map<String, Integer> domainMap = new HashMap<String, Integer>();
+
         while( m.find() ) {
 
         }

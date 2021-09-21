@@ -25,9 +25,7 @@ public class EmailSearch {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         searchFile(contents);
-
     }
 
     private static void searchFile(String contents) {
@@ -37,29 +35,34 @@ public class EmailSearch {
         Matcher m = emailPattern.matcher(contents);
 
         int matchCount = 0;
-        Set<String> uniqueDomains = new HashSet<>();
+        Map<String, Domain> domainCountMap = new HashMap<>();
         while( m.find() ) {
-            String domain = m.group(1);
-            uniqueDomains.add(domain);
-            System.out.println("domain " + domain);
-            matchCount++;
+            String domainName = m.group(1);
+            Domain domain = domainCountMap.getOrDefault(domainName, new Domain(domainName) );
+            domain.incrementCount();
+            domainCountMap.put(domainName, domain);
         }
 
-        System.out.println("Found " + matchCount);
-        System.out.println("Count of unique domains " + uniqueDomains.size());
+        System.out.println("Count of unique domains " + domainCountMap.size());
 
-        List<String> sortedDomains = uniqueDomains.stream().sorted().collect(Collectors.toList());
-        System.out.println("Sorted List of domains ");
-        for ( String domain: sortedDomains){
-            System.out.println("domain " + domain);
-        }
-
-        System.out.println(":Lambda style Sorted List of domains ");
-        uniqueDomains.stream().sorted().forEach(
-                domain -> System.out.println(domain)
+        System.out.println("Domains sorted by name");
+        domainCountMap.keySet().stream().forEachOrdered(
+                     domainKey -> System.out.printf("domain %s %n", domainCountMap.get(domainKey) )
         );
 
-
+        System.out.printf("%nDomains sorted by name%n");
+        domainCountMap.values().stream().sorted(new Comparator<Domain>() {
+            @Override
+            public int compare(Domain leftDomain, Domain rightDomain) {
+                if ( leftDomain.getCount() == rightDomain.getCount() ){
+                    return leftDomain.getName().compareTo(rightDomain.getName());
+                } else {
+                    return (leftDomain.getCount() > rightDomain.getCount() ) ? 1 : -1 ;
+                }
+            }
+        }).forEach(
+                domain -> System.out.printf("domain %s %n", domain )
+        );
 
     }
 

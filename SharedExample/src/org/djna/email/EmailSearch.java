@@ -18,7 +18,10 @@ public class EmailSearch {
             fileName = args[1];
         }
         try {
-            searchFile(fileName);
+            String regex = "\\S+@((?:\\w+\\.)+\\w+)\\s*";
+            Map<String, Integer> domainMap = Helpers.searchFileWithRegex(fileName, regex);
+            Helpers.printResults(Helpers.sortMap(domainMap));
+            System.out.printf("Found %s %d times", regex, Helpers.getTotalDomains(domainMap));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,7 +38,7 @@ public class EmailSearch {
         Pattern emailPattern = Pattern.compile(regex);
         Matcher m = emailPattern.matcher(contents);
 
-        Map<String, Integer> domainMap = new HashMap<>();
+        Map<String, Integer> domainMap = new HashMap<String, Integer>();
         while( m.find() ) {
             String domain = m.group(1);
             Integer domainCount = domainMap.get(domain);
@@ -47,19 +50,17 @@ public class EmailSearch {
             counter++;
         }
 
-        printFromMap(domainMap);
-
-        System.out.printf("Found %s %d times", regex, counter);
-
-    }
-
-    private static void printFromMap(Map<String, Integer> domainMap) {
         for ( String domain: domainMap.keySet() ){
             StringBuffer stringBuffer = new StringBuffer("Domain ");
             stringBuffer.append(domain);
             stringBuffer.append(": ");
             stringBuffer.append(domainMap.get(domain));
-            System.out.println(stringBuffer);
+            System.out.println(stringBuffer.toString());
         }
+
+        System.out.printf("Found %s %d times", regex, counter);
+
     }
+
+
 }

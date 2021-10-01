@@ -48,7 +48,7 @@ public class EmailSearch {
         }
 
         for ( String domain: domainMap.keySet() ){
-            StringBuffer stringBuffer = new StringBuffer("Domain ");
+            StringBuffer stringBuffer = new StringBuffer("DomainName ");
             stringBuffer.append(domain);
             stringBuffer.append(": ");
             stringBuffer.append(domainMap.get(domain));
